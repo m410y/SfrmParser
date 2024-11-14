@@ -1,13 +1,14 @@
-name = "SFRM"
+name = "SfrmParser"
 uuid = "a1f4a418-2db2-426e-8f95-4f1e101cdea5"
 authors = ["Artem m410y@proton.me"]
-version = "1.0.0-DEV"
+version = "0.0.1-DEV"
+
+[deps]
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 
 [compat]
+FileIO = "1.16.4"
 julia = "1.6.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test"]
