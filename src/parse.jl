@@ -70,25 +70,31 @@ function data_merge_overflow!(
     nothing
 end
 
+function simplify_header_field(types, values)
+    isempty(values) && return nothing
+end
+
 function read_header(io::IO)
     header = Dict{String,Any}()
     read_header_blocks!(io, header, BLOCKS_MIN)
     blocks_remain = parse(Int, header["HDRBLKS"][1]) - BLOCKS_MIN
     read_header_blocks!(io, header, blocks_remain)
 
-    my_parse((type, str)) = type == String ? str : parse(type, str)
     for (key, values) in header
         if isempty(values)
-            header[key] = nothing
-            continue
-        end
+
         if haskey(HEADER_FIELDS, key)
-            types = HEADER_FIELDS[key]
-            header[key] = Tuple(my_parse.(zip(types, values)))
-            length(header[key]) == 1 && (header[key] = first(header[key]))
+            values = map(
+                (type, value) -> begin
+                    type == String && return value
+                    parsed = tryparse(type, value)
+                    return isnothing(parsed) ? value : parsed
+                end,
+                zip(types, values)
+            )
+            
             continue
         end
-        header[key] = join(values, " ")
     end
     if haskey(header, "CREATED")
         date = Date(header["CREATED"][1], "dd-u-yyyy")

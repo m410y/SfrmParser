@@ -2,6 +2,7 @@ module SfrmParser
 
 using FileIO
 using Dates
+using Printf
 
 struct SfrmFile
     header::Dict{String,Any}
